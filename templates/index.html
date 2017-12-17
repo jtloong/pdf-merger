@@ -1,21 +1,22 @@
-
 <!doctype html>
 <head>
-    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
-  <title>Upload new File</title>
-  <h1>Upload new File</h1>
+  <title>PDF Join</title>
+  <h1>PDF Join/h1>
   <form action="/upload/" method=post enctype=multipart/form-data>
     <p><input type=file name=file>
        <input type=submit value=Upload>
   </form>
   <div class ="outer">
+    <p>
     <form class="buttons" action="/merge/" method=post>
         <button name="merge_button" type="submit">Merge</button>
     </form>
     <form class="buttons" action="/download" method=get>
       <button name="download_button" type="submit">Download</button>
     </form>
+  </p>
   </div>
 </body>

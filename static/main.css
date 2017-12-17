@@ -1,4 +1,3 @@
-.outer {
+.outer .buttons{
   display: inline-block;
-  width: 500px;
 }
