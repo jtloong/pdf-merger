@@ -1,0 +1,21 @@
+
+<!doctype html>
+<head>
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+  <title>Upload new File</title>
+  <h1>Upload new File</h1>
+  <form action="/upload/" method=post enctype=multipart/form-data>
+    <p><input type=file name=file>
+       <input type=submit value=Upload>
+  </form>
+  <div class ="outer">
+    <form class="buttons" action="/merge/" method=post>
+        <button name="merge_button" type="submit">Merge</button>
+    </form>
+    <form class="buttons" action="/download" method=get>
+      <button name="download_button" type="submit">Download</button>
+    </form>
+  </div>
+</body>
