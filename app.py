@@ -1,31 +1,33 @@
-import os, errno, glob
+import os, errno, glob, time
 from flask import Flask, request, redirect, url_for, send_file, render_template
 from werkzeug import secure_filename
 from PyPDF2 import PdfFileMerger
 import sqlite3 as sql
 
 UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = set(['png'])
+ALLOWED_EXTENSIONS = set(['pdf'])
 userIP = ""
+timeOfVisit = ""
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-@app.before_request
-def getSessionID():
-    userIP = request.remote_addr
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
     try:
-        os.makedirs("./uploads")
+        os.makedirs("./downloads")
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
+    userIP = str(request.remote_addr)
+    timeOfVisit = str(time.time())
+    print(userIP + " - " + timeOfVisit)
     return render_template('index.html', title='Home')
 
 @app.route("/upload/", methods=['POST'])
@@ -36,32 +38,47 @@ def upload():
             print(f.filename)
             con = sql.connect("database.db")
             cur = con.cursor()
-            cur.execute("INSERT INTO files (user,filename,file) VALUES (?,?,?,?)",(userIP,secure_filename(f.filename),f) )
+            print("User: " + userIP + " | time of visit: " + timeOfVisit + "file:" + f.filename)
+            cur.execute("INSERT INTO files (user, timeOfVisit, filename,file) VALUES (?,?,?,?)",(userIP,timeOfVisit, f.filename,f.read()) )
             con.commit()
             print("Record successfully added")
+            cur.close()
+            con.close()
         except:
-            con.rollback()
             print("error in insert operation")
+            return render_template('index.html', title='Home')
         finally:
             return render_template('index.html', title='Home')
-            con.close()
+
 
 
 
 @app.route("/merge/", methods=['POST'])
 def merge():
-    pdfs = os.listdir("./uploads/")
-    print(pdfs)
-    merger = PdfFileMerger()
-    for pdf in pdfs:
-        merger.append("./uploads/" + pdf)
-    with open('./uploads/result.pdf', 'wb') as fout:
-        merger.write(fout)
+    con = sql.connect("database.db")
+    cur = con.cursor()
+    data = cur.execute("SELECT * FROM files WHERE user =? AND timeOfVisit=?",(userIP, timeOfVisit))
+    pdfs = []
+    # while True:
+    #
+    #     rows = cur.fetchall()
+    #     for row in rows:
+    #         if row == None:
+    #             break
+    #         print (row[2])
+    #
+
+    # print(pdfs)
+    # merger = PdfFileMerger()
+    # for pdf in pdfs:
+    #     merger.append(pdf)
+    # with open('./uploads/result.pdf', 'wb') as fout:
+    #     merger.write(fout)
     return render_template('index.html', title='Home')
 
 @app.route("/download/", methods=['GET'])
 def download():
-    return send_file('uploads/result.pdf',
+    return send_file('downloads/result.pdf',
                      mimetype='application/pdf',
                      attachment_filename='result.pdf',
                      as_attachment=True)
