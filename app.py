@@ -25,8 +25,7 @@ def index():
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
-    userIP = str(request.remote_addr)
-    timeOfVisit = str(time.time())
+
     print(userIP + " - " + timeOfVisit)
     return render_template('index.html', title='Home')
 
@@ -34,18 +33,21 @@ def index():
 def upload():
     if request.method == 'POST':
         try:
+            userIP = str(request.remote_addr)
             f = request.files['file']
             print(f.filename)
             con = sql.connect("database.db")
+            print(con)
             cur = con.cursor()
-            print("User: " + userIP + " | time of visit: " + timeOfVisit + "file:" + f.filename)
-            cur.execute("INSERT INTO files (user, timeOfVisit, filename,file) VALUES (?,?,?,?)",(userIP,timeOfVisit, f.filename,f.read()) )
+            print(cur)
+            print("User: " + userIP + " | time of visit: " + str(time.asctime(time.localtime(time.time()))) + "| file:" + f.filename)
+            cur.execute("INSERT INTO files (user, timeOfVisit, filename,file) VALUES (?,?,?,?)",(userIP,timeOfVisit, f.filename,f.read()))
             con.commit()
             print("Record successfully added")
             cur.close()
             con.close()
-        except:
-            print("error in insert operation")
+        except Exception as e:
+            print("error in insert operation: " + e)
             return render_template('index.html', title='Home')
         finally:
             return render_template('index.html', title='Home')
@@ -57,7 +59,7 @@ def upload():
 def merge():
     con = sql.connect("database.db")
     cur = con.cursor()
-    data = cur.execute("SELECT * FROM files WHERE user =? AND timeOfVisit=?",(userIP, timeOfVisit))
+    data = cur.execute("SELECT * FROM files WHERE user =? AND timeOfVisit=?",(userIP))
     pdfs = []
     # while True:
     #
