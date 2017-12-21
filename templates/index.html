@@ -1,6 +1,7 @@
 <!doctype html>
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Rubik+Mono+One" rel="stylesheet"> 
 </head>
 <body>
   <title>PDF Join</title>
@@ -13,9 +14,6 @@
     <p>
     <form class="buttons" action="/merge/" method=post>
         <button name="merge_button" type="submit">Merge</button>
-    </form>
-    <form class="buttons" action="/download" method=get>
-      <button name="download_button" type="submit">Download</button>
     </form>
   </p>
   </div>
