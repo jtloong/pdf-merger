@@ -87,7 +87,7 @@ def merge():
         merger.append(io.BytesIO(row[3]))
     cur.close()
     con.close()
-    with open('./downloads/result' + user + '.pdf', 'w+') as fout:
+    with open('./downloads/result' + user + '.pdf', 'w') as fout:
         merger.write(fout)
     return send_file('./downloads/result' + user + '.pdf',
                          mimetype='application/pdf',
