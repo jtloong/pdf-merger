@@ -10,20 +10,40 @@ h5{
   margin-bottom: 30px;
 }
 
+.outer-box{
+  font-family: 'Montserrat';
+  background-color: #F46A38;
+  text-align: center;
+  border-radius: 10px;
+  padding: 5px 0 10px 0;
+
+}
+
+@media(max-width: 500px){
+  .outer-box{
+    width: 90%;
+    margin: 30px auto;
+  }
+
+  h1{
+    width: 70%;
+    margin: 0 auto;
+  }
+}
+
+@media(min-width: 501px){
+  .outer-box{
+    width: 350px;
+    margin:  150px auto;
+
+  }
+}
+
 body{
   background-color:#898989;
 }
 
-.outer-box{
-  font-family: 'Montserrat';
-  width: 300px;
-  margin:  150px auto;
-  background-color: #F46A38;
-  text-align: center;
-  border-radius: 5px;
-  padding: 5px 0 10px 0;
 
-}
 
 .buttons {
   background: #307fdb;
