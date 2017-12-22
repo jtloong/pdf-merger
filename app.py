@@ -89,7 +89,7 @@ def merge():
     con.close()
     with open('./downloads/result' + user + '.pdf', 'wb') as fout:
         merger.write(fout)
-    return send_file('downloads/result' + user + '.pdf',
+    return send_file('./downloads/result' + user + '.pdf',
                          mimetype='application/pdf',
                          attachment_filename='result.pdf',
                          as_attachment=True)
