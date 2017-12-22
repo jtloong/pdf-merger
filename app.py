@@ -22,10 +22,8 @@ def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
 @app.route("/", methods=['GET', 'POST'])
 def index():
     user = id_generator()
-
     resp = make_response(render_template('index.html', title='Home'))
     resp.set_cookie('userID', user)
-    print(user)
 
     return resp
 
@@ -33,11 +31,8 @@ def index():
 def upload():
     if request.method == 'POST':
         try:
-            print("Hello?")
             userID = str(request.cookies.get('userID'))
-            print(userID)
             time = str(datetime.now())
-            print(time)
             f = request.files['file']
 
             con = sql.connect("database.db")
@@ -72,7 +67,6 @@ def merge():
     pdfs = []
     merger = PdfFileMerger()
     for row in data:
-        print("User: " + row[0] + " | time of visit: " + row[1] + "| file:" + row[2])
         merger.append(io.BytesIO(row[3]))
 
     with open('./downloads/result.pdf', 'wb') as fout:

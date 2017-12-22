@@ -3,6 +3,60 @@ h1{
   font-size: 50px
 }
 
-.outer .buttons{
-  display: inline-block;
+body{
+  background-color:#898989;
+}
+
+.outer-box{
+  font-family: 'Open Sans';
+  width: 300px;
+  margin:  150px auto;
+  background-color: #F46A38;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 0 10px 0;
+
+}
+
+.buttons{
+  background-color: #5da271;
+  color:black;
+  border-radius: 5px;
+  vertical-align: middle;
+
+}
+
+.button-text{
+  vertical-align: middle;
+  line-height: 35px;
+}
+
+.material-icons{
+  vertical-align: middle;
+}
+
+.input-file {
+	/*! width: 0.1px; */
+	/*! height: 0.1px; */
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index:2;
+}
+
+form{
+  color: black;
+}
+
+.input-file + label {
+    background-color: #e3e3e3;
+    width: 150px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.input-file:focus + label,
+.input-file:hover,
+.input-file + label:hover {
+    cursor: pointer;
 }
