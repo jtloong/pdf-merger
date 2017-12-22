@@ -19,10 +19,10 @@ h5{
 
 }
 
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 600px){
   .outer-box{
     width: 90%;
-    margin: 30px auto;
+    margin: 20% auto;
   }
 
   h1{
