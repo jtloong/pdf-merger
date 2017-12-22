@@ -245,3 +245,5 @@ six == 1.10.0
 
 # env/lib/python3.5/site-packages/pip/commands/install.py: 10
 wheel == 0.29.0
+
+gunicorn==19.4.5
