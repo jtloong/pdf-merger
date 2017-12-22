@@ -1,5 +1,5 @@
 import os, errno, glob, time, random, string, io
-from flask import Flask, request, redirect, url_for, send_file, render_template, make_response
+from flask import Flask, request, redirect, url_for, send_file, render_template, make_response,flash
 from werkzeug import secure_filename
 from PyPDF2 import PdfFileMerger
 from datetime import datetime
@@ -18,6 +18,18 @@ def allowed_file(filename):
 def id_generator(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
+def getUploadedFiles(user):
+    con = sql.connect("database.db")
+    cur = con.cursor()
+    data = cur.execute("SELECT * FROM files WHERE (user =?)",(user,))
+    filenames = []
+
+    for row in data:
+        filenames.append(dict(name=row[2]))
+
+    cur.close()
+    con.close()
+    return filenames
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -34,8 +46,10 @@ def upload():
             userID = str(request.cookies.get('userID'))
             time = str(datetime.now())
             f = request.files['file']
+            currentFiles = []
 
             con = sql.connect("database.db")
+
             cur = con.cursor()
 
             print(f.filename)
@@ -47,13 +61,16 @@ def upload():
             con.commit()
             print("Record successfully added")
 
+            currentFiles = getUploadedFiles(userID)
+            print(currentFiles)
+
             cur.close()
             con.close()
         except:
             print("error in insert operation")
-            return render_template('index.html', title='Home')
+            return render_template('index.html', file_names = currentFiles, title='Home')
         finally:
-            return render_template('index.html', title='Home')
+            return render_template('index.html', file_names = currentFiles, title='Home')
 
 
 
@@ -68,10 +85,11 @@ def merge():
     merger = PdfFileMerger()
     for row in data:
         merger.append(io.BytesIO(row[3]))
-
-    with open('./downloads/result.pdf', 'wb') as fout:
+    cur.close()
+    con.close()
+    with open('./downloads/result' + user + '.pdf', 'wb') as fout:
         merger.write(fout)
-    return send_file('downloads/result.pdf',
+    return send_file('downloads/result' + user + '.pdf',
                          mimetype='application/pdf',
                          attachment_filename='result.pdf',
                          as_attachment=True)
